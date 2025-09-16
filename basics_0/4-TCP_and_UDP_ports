@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if command -v ss >/dev/null 2>&1; then
+  # ss is the modern replacement for netstat
+  # -l: listening only, -t: TCP, -u: UDP, -n: don't resolve names, -p: show PID/Program
+  echo "Active Internet connections (only servers)"
+  sudo ss -ltnp
+  sudo ss -lunp
+else
+  # Fallback to netstat if ss is not available
+  # --listening: only servers, --program: show PID/Program name, --numeric: don't resolve names
+  sudo netstat --listening --program --numeric --tcp
+  sudo netstat --listening --program --numeric --udp
+fi
