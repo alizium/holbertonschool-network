@@ -3,14 +3,15 @@
 set -euo pipefail
 
 if command -v ss >/dev/null 2>&1; then
-  # ss is the modern replacement for netstat
-  # -l: listening only, -t: TCP, -u: UDP, -n: don't resolve names, -p: show PID/Program
-  echo "Active Internet connections (only servers)"
-  sudo ss -ltnp
-  sudo ss -lunp
+  # ss = moderne ; -l listening, -p PID/prog, -u UDP, -t TCP, -n numérique, -e extra
+  sudo ss -lpunet
+elif command -v netstat >/dev/null 2>&1; then
+  # fallback netstat
+  sudo netstat -lpunet
+elif command -v lsof >/dev/null 2>&1; then
+  # dernier recours
+  sudo lsof -nP -iTCP -sTCP:LISTEN -iUDP
 else
-  # Fallback to netstat if ss is not available
-  # --listening: only servers, --program: show PID/Program name, --numeric: don't resolve names
-  sudo netstat --listening --program --numeric --tcp
-  sudo netstat --listening --program --numeric --udp
+  echo "Aucun outil trouvé (ss/netstat/lsof). Installe iproute2, net-tools ou lsof." >&2
+  exit 1
 fi
