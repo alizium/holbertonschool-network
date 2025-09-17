@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Script that configures localhost and facebook.com IP resolution
 
 echo "127.0.0.2 localhost" | sudo tee -a /etc/hosts > /dev/null
