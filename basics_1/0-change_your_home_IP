@@ -1,5 +1,25 @@
 #!/usr/bin/env bash
-# Script that configures localhost and facebook.com IP resolution
 
-echo "127.0.0.2 localhost" | sudo tee -a /etc/hosts > /dev/null
-echo "8.8.8.8 facebook.com" | sudo tee -a /etc/hosts > /dev/null
+# Script that configures /etc/hosts so that: localhost -> 127.0.0.2 and facebook.com -> 8.8.8.8
+
+# Arrête le script au premier échec
+set -e
+
+# Crée un fichier temporaire qui contiendra le nouveau /etc/hosts
+tmp="$(mktemp)"
+
+# Écrit en tête la redirection de localhost voulue (doit apparaître avant toute autre ligne localhost)
+echo "127.0.0.2 localhost" > "$tmp"
+
+# Écrit la redirection de facebook.com voulue (doit apparaître avant toute autre ligne facebook.com)
+echo "8.8.8.8 facebook.com" >> "$tmp"
+
+# Ajoute l'ancien /etc/hosts en supprimant toute ligne qui mappe déjà facebook.com
+grep -vE '(^|[[:space:]])facebook\.com([[:space:]]|$)' /etc/hosts >> "$tmp"
+
+# Remplace les lignes localhost IPv4 existantes (127.x.x.x … localhost …) en les ayant déjà exclues puis réécrites en tête
+# (On a déjà mis notre localhost avant, donc les anciennes lignes ne doivent pas rester : on réécrit /etc/hosts avec $tmp)
+cp "$tmp" /etc/hosts
+
+# Nettoie le fichier temporaire
+rm -f "$tmp"
