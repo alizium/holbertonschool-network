@@ -2,7 +2,5 @@
 
 # Script that configures localhost and facebook.com IP resolution
 
-cp /etc/hosts ~/hosts.new
-sed -i 's/127.0.0.1\slocalhost/127.0.0.2 localhost/g' ~/hosts.new
-echo "8.8.8.8 facebook.com" >> ~/hosts.new
-cp -f ~/hosts.new /etc/hosts
+echo "127.0.0.2 localhost" | sudo tee -a /etc/hosts > /dev/null
+echo "8.8.8.8 facebook.com" | sudo tee -a /etc/hosts > /dev/null
