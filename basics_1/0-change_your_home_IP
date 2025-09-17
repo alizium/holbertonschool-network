@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
+
 # Script that configures localhost and facebook.com IP resolution
 
-echo "127.0.0.2 localhost" | sudo tee -a /etc/hosts > /dev/null
-echo "8.8.8.8 facebook.com" | sudo tee -a /etc/hosts > /dev/null
+# Supprime les anciennes lignes contenant localhost et facebook.com
+grep -v "localhost" /etc/hosts | grep -v "facebook.com" > tmp_hosts
+
+# Ajoute nos nouvelles correspondances en haut du fichier temporaire
+echo "127.0.0.2 localhost" >> tmp_hosts
+echo "8.8.8.8 facebook.com" >> tmp_hosts
+
+# Remplace /etc/hosts par le fichier temporaire
+sudo cp tmp_hosts /etc/hosts
+rm tmp_hosts
