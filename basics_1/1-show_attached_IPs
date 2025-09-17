@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Script that displays all active IPv4 IPs on the machine
 
-# Utilise la commande 'ip' pour lister les adresses IPv4,
-# puis 'awk' pour ne garder que l'adresse, et 'cut' pour enlever le masque (/xx).
-ip -4 -o addr show | awk '{print $4}' | cut -d/ -f1
+# Utilise ifconfig pour lister les interfaces,
+# grep pour trouver les lignes avec "inet" (les adresses IPv4),
+# puis awk pour extraire la deuxième colonne (l'adresse IP),
+# et sed pour supprimer le mot "addr:" si présent sur certaines distributions.
+ifconfig | grep 'inet ' | awk '{print $2}' | sed 's/addr://'
