@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# Écoute sur le port TCP 98 en local
+set -euo pipefail
+
+# Définit l’adresse IP localhost
+HOST="127.0.0.1"
+
+# Définit le port à écouter
+PORT="98"
+
+# Fonction pour écouter avec la version OpenBSD de nc
+listen_with_nc_openbsd() {
+  nc -l "${HOST}" "${PORT}"
+}
+
+# Fonction pour écouter avec une syntaxe alternative
+listen_with_nc_alt() {
+  nc -l -p "${PORT}" "${HOST}"
+}
+
+# Fonction pour écouter avec BusyBox nc
+listen_with_busybox() {
+  nc -l -p "${PORT}" -s "${HOST}"
+}
+
+# Vérifie si la commande nc est installée
+if command -v nc >/dev/null 2>&1; then
+  # Teste la syntaxe OpenBSD
+  if listen_with_nc_openbsd 2>/dev/null; then
+    exit 0
+  fi
+  # Teste la syntaxe alternative
+  if listen_with_nc_alt 2>/dev/null; then
+    exit 0
+  fi
+  # Teste la syntaxe BusyBox
+  if listen_with_busybox 2>/dev/null; then
+    exit 0
+  fi
+  # Si aucune méthode ne marche, affiche un message d’erreur
+  echo "nc trouvé mais aucune syntaxe ne fonctionne." >&2
+  echo "Installez netcat-openbsd avec: sudo apt-get install netcat-openbsd" >&2
+  exit 1
+else
+  # Si nc n’est pas installé, affiche un message d’erreur
+  echo "nc (netcat) n’est pas installé. Installez-le avec: sudo apt-get update && sudo apt-get install -y netcat-openbsd" >&2
+  exit 1
+fi
