@@ -1,0 +1,117 @@
+Que se passe-t-il quand vous tapez https://www.google.com dans votre navigateur et appuyez sur Entrée ?
+
+C’est une question classique en entretien technique, car elle permet de tester la compréhension globale du fonctionnement d’Internet et d’un système web. Derrière ce geste simple, taper une URL, se cache une série de processus complexes qui impliquent réseau, protocoles, sécurité, serveurs et bases de données.
+
+Dans cet article, nous allons décortiquer étape par étape ce qui se passe quand vous accédez à https://www.google.com.
+
+1. La résolution DNS
+
+Lorsque vous tapez www.google.com, votre ordinateur doit d’abord savoir quelle adresse IP correspond à ce nom de domaine.
+
+Le navigateur vérifie d’abord sa mémoire cache locale.
+
+Si l’adresse n’est pas trouvée, il interroge un serveur DNS récursif (souvent celui de votre fournisseur d’accès ou un service public comme Google DNS 8.8.8.8).
+
+Ce serveur contacte d’autres serveurs DNS, jusqu’à trouver l’adresse IP de www.google.com.
+
+Finalement, votre ordinateur reçoit l’adresse IP (par exemple 142.250.74.36).
+
+Sans le DNS, nous serions obligés de mémoriser des adresses IP pour accéder aux sites.
+
+2. La connexion réseau via TCP/IP
+
+Une fois l’adresse IP connue, votre ordinateur établit une connexion TCP avec le serveur distant :
+
+IP (Internet Protocol) : permet de trouver la machine cible dans le réseau mondial.
+
+TCP (Transmission Control Protocol) : assure que les paquets arrivent complets et dans le bon ordre.
+
+Le navigateur envoie une requête SYN, le serveur répond par SYN-ACK, puis votre machine confirme avec un ACK → c’est la fameuse handshake TCP en 3 étapes.
+
+3. Le rôle du pare-feu (Firewall)
+
+Avant même d’arriver au serveur Google, la requête passe par plusieurs pare-feux :
+
+Sur votre machine : pour bloquer d’éventuelles connexions malveillantes.
+
+Chez votre FAI : pour filtrer le trafic.
+
+Chez Google : pour protéger ses serveurs d’attaques (DDoS, intrusions, etc.).
+
+Ces filtres garantissent que seules les communications autorisées sont établies.
+
+4. L’établissement d’une connexion sécurisée HTTPS/SSL
+
+Comme vous avez tapé https://, la communication est chiffrée :
+
+Le navigateur et le serveur Google échangent des certificats SSL/TLS.
+
+Ils établissent une clé de session temporaire pour chiffrer la communication.
+
+Cela empêche quiconque (même votre fournisseur d’accès) de lire le contenu échangé.
+
+Le petit cadenas dans la barre du navigateur confirme que la connexion est sécurisée.
+
+5. Le passage par un Load Balancer
+
+Google gère des millions de requêtes par seconde. Une seule machine ne suffirait jamais.
+
+C’est là qu’intervient le load balancer :
+
+Il reçoit votre requête et décide à quel serveur l’envoyer.
+
+Cela permet de répartir la charge entre plusieurs serveurs, d’assurer la disponibilité et de réduire la latence.
+
+Sans load balancer, l’expérience utilisateur serait bien plus lente et instable.
+
+6. Le serveur web
+
+Une fois dirigée vers un serveur particulier, la requête atteint le serveur web (par exemple Nginx ou Apache).
+
+Son rôle est de traiter les requêtes HTTP.
+
+Il vérifie le type de ressource demandée (HTML, CSS, image, etc.).
+
+Si la ressource est statique (comme une image), elle est renvoyée directement.
+
+Si elle est dynamique (comme une recherche Google), la requête est transférée à l’application server.
+
+7. Le serveur applicatif
+
+Le serveur applicatif exécute la logique métier :
+
+Pour Google, il s’agit par exemple d’analyser votre requête de recherche, d’appliquer des algorithmes complexes et de préparer une réponse personnalisée.
+
+Il peut être construit avec divers langages et frameworks (C++, Java, Python, Go, etc.).
+
+C’est ici que réside la véritable “intelligence” du service.
+
+8. La base de données
+
+Enfin, l’application serveur doit souvent interroger une base de données :
+
+Google dispose de gigantesques bases réparties mondialement.
+
+Elles contiennent les index de toutes les pages web, les résultats classés par pertinence, et d’innombrables données pour optimiser vos recherches.
+
+Une fois la réponse calculée, elle est renvoyée au serveur web, puis retransmise via Internet à votre navigateur.
+
+9. L’affichage dans le navigateur
+
+Le navigateur reçoit le code HTML, CSS et JavaScript, puis :
+
+Il analyse et construit le DOM (Document Object Model).
+
+Il applique les styles CSS.
+
+Il exécute les scripts JavaScript.
+
+Il affiche enfin la page avec tous ses composants.
+
+En moins d’une seconde, votre écran vous montre la page d’accueil de Google.
+
+En Conclusion :
+
+Ce simple geste, taper https://www.google.com déclenche une incroyable chaîne d’événements : du DNS à la base de données, en passant par la sécurité, les serveurs et le rendu du navigateur.
+
+Comprendre ces mécanismes est essentiel pour tout ingénieur logiciel, car cela illustre comment chaque couche de la pile logicielle et réseau s’articule pour offrir une expérience fluide à l’utilisateur final.
